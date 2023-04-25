@@ -14,12 +14,13 @@ build:
   entry_points:
     - openai=openai._openai_scripts:main
   script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
-  # Minimum required version is 3.7.1.
-  skip: True # [py<37]
+  # Minimum required version is 3.7.1, and s390x does not have pandas-stubs
+  skip: True # [py<37 or s390x]
 
 requirements:
   host:
     - pip
+    - wheel
     - python
   run:
     - aiohttp
