@@ -22,13 +22,14 @@ requirements:
     - pip
     - wheel
     - python
+    - setuptools 66.0.0
   run:
     - aiohttp
     - python
     - requests >=2.20
     - tqdm
     - colorama
-    - typing_extensions
+    - typing_extensions  # [py<38]
     # The following are required for the optional things.
     - numpy
     - pandas >=1.2.3
