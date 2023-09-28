@@ -10,7 +10,7 @@ source:
   sha256: 5a144dc655d6f097503c49625ddc423b28f676b96e51679093c5489a997c7f6a
 
 build:
-  number: 0
+  number: 1
   entry_points:
     - openai=openai._openai_scripts:main
   script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
@@ -22,7 +22,7 @@ requirements:
     - pip
     - wheel
     - python
-    - setuptools 66.0.0
+    - setuptools
   run:
     - aiohttp
     - python
