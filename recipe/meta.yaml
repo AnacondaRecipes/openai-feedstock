@@ -1,5 +1,5 @@
 {% set name = "openai" %}
-{% set version = "0.27.4" %}
+{% set version = "1.3.6" %}
 
 package:
   name: {{ name|lower }}
@@ -7,44 +7,39 @@ package:
 
 source:
   url: https://github.com/openai/openai-python/archive/refs/tags/v{{ version }}.tar.gz
-  sha256: 5a144dc655d6f097503c49625ddc423b28f676b96e51679093c5489a997c7f6a
+  sha256: 47e856250e456fafb3368166e895647dc38aae998d0286473cfad2bb78a932e3
 
 build:
-  number: 1
+  number: 0
   entry_points:
-    - openai=openai._openai_scripts:main
+    - openai=openai.cli:main
   script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
   # Minimum required version is 3.7.1, and s390x does not have pandas-stubs
   skip: True # [py<37 or s390x]
 
 requirements:
   host:
+    - python
     - pip
-    - wheel
-    - python
-    - setuptools
+    - hatchling
   run:
-    - aiohttp
     - python
-    - requests >=2.20
-    - tqdm
-    - colorama
-    - typing_extensions  # [py<38]
+    - anyio <4,>=3.5.0
+    - distro <2,>=1.7.0
+    - httpx <1,>=0.23.0
+    - pydantic <3,>=1.9.0
+    - sniffio
+    - tqdm >4
+    - typing-extensions <5,>=4.5
     # The following are required for the optional things.
     - numpy
     - pandas >=1.2.3
     - pandas-stubs >=1.1.0.11
-    - openpyxl >=3.0.7
-    - scikit-learn >=1.0.2
-    - tenacity >=8.0.1
-    - matplotlib-base
-    - plotly
-    - scipy
 
 test:
   imports:
     - openai
-    - openai.api_resources
+    - openai.version
   commands:
     - openai api -h
     - pip check
@@ -67,7 +62,7 @@ about:
   license: MIT
   license_family: MIT
   license_file: LICENSE
-  doc_url: https://platform.openai.com/docs/api-reference?lang=python
+  doc_url: https://github.com/openai/openai-python
   dev_url: https://github.com/openai/openai-python
 
 extra:
