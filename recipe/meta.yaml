@@ -1,5 +1,5 @@
 {% set name = "openai" %}
-{% set version = "1.3.6" %}
+{% set version = "1.9.0" %}
 
 package:
   name: {{ name|lower }}
@@ -7,7 +7,7 @@ package:
 
 source:
   url: https://github.com/openai/openai-python/archive/refs/tags/v{{ version }}.tar.gz
-  sha256: 47e856250e456fafb3368166e895647dc38aae998d0286473cfad2bb78a932e3
+  sha256: 48a8118a555a8d4c7e780f41c3abeecf17bbba09b1a5ae0dbc29eae3111ecb0c
 
 build:
   number: 0
@@ -24,15 +24,16 @@ requirements:
     - hatchling
   run:
     - python
-    - anyio <4,>=3.5.0
+    - anyio <5,>=3.5.0
     - distro <2,>=1.7.0
     - httpx <1,>=0.23.0
     - pydantic <3,>=1.9.0
     - sniffio
     - tqdm >4
-    - typing-extensions <5,>=4.5
+    - typing-extensions <5,>=4.7
+    - cached-property  # [py<38]
     # The following are required for the optional things.
-    - numpy
+    - numpy >=1
     - pandas >=1.2.3
     - pandas-stubs >=1.1.0.11
 
