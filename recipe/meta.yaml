@@ -1,13 +1,15 @@
 {% set name = "openai" %}
-{% set version = "1.9.0" %}
+{% set version = "1.25.0" %}
 
 package:
   name: {{ name|lower }}
   version: {{ version }}
 
 source:
-  url: https://github.com/openai/openai-python/archive/refs/tags/v{{ version }}.tar.gz
-  sha256: 48a8118a555a8d4c7e780f41c3abeecf17bbba09b1a5ae0dbc29eae3111ecb0c
+  url: https://github.com/{{ name }}/{{ name }}-python/archive/refs/tags/v{{ version }}.tar.gz
+  sha256: 3cd5b10399eb97e498f97a7bf88ffbd101fa44fb35bfe7c4885f87c1c672f892
+  patches:
+    - 001-remove-fancy-pypi-readme.patch
 
 build:
   number: 0
@@ -18,6 +20,9 @@ build:
   skip: True # [py<37 or s390x]
 
 requirements:
+  build:
+    - patch     # [not win]
+    - m2-patch  # [win]
   host:
     - python
     - pip
@@ -32,6 +37,7 @@ requirements:
     - tqdm >4
     - typing-extensions <5,>=4.7
     - cached-property  # [py<38]
+  run_constrained:
     # The following are required for the optional things.
     - numpy >=1
     - pandas >=1.2.3
@@ -60,8 +66,8 @@ about:
     This library additionally provides an `openai` command-line utility which
     makes it easy to interact with the API from your terminal.
     Run `openai api -h` for usage.
-  license: MIT
-  license_family: MIT
+  license: Apache-2.0
+  license_family: Apache
   license_file: LICENSE
   doc_url: https://github.com/openai/openai-python
   dev_url: https://github.com/openai/openai-python
