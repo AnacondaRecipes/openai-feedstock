@@ -37,6 +37,7 @@ requirements:
     - tqdm >4
     - typing-extensions <5,>=4.7
     - cached-property  # [py<38]
+  run_constrained:
     # The following are required for the optional things.
     - numpy >=1
     - pandas >=1.2.3
