@@ -65,8 +65,8 @@ about:
     This library additionally provides an `openai` command-line utility which
     makes it easy to interact with the API from your terminal.
     Run `openai api -h` for usage.
-  license: MIT
-  license_family: MIT
+  license: Apache-2.0
+  license_family: Apache
   license_file: LICENSE
   doc_url: https://github.com/openai/openai-python
   dev_url: https://github.com/openai/openai-python
