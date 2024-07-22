@@ -1,5 +1,5 @@
 {% set name = "openai" %}
-{% set version = "1.25.0" %}
+{% set version = "1.37.0" %}
 
 package:
   name: {{ name|lower }}
@@ -7,7 +7,7 @@ package:
 
 source:
   url: https://github.com/{{ name }}/{{ name }}-python/archive/refs/tags/v{{ version }}.tar.gz
-  sha256: 3cd5b10399eb97e498f97a7bf88ffbd101fa44fb35bfe7c4885f87c1c672f892
+  sha256: 65fbba12f72cde2d3ab458153cab7f7b0ec63d67f116ee69ff0db2f58f082ecf
   patches:
     - 001-remove-fancy-pypi-readme.patch
 
@@ -17,7 +17,7 @@ build:
     - openai=openai.cli:main
   script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
   # Minimum required version is 3.7.1, and s390x does not have pandas-stubs
-  skip: True # [py<37 or s390x]
+  skip: True # [py<38 or s390x]
 
 requirements:
   build:
