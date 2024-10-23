@@ -1,5 +1,5 @@
 {% set name = "openai" %}
-{% set version = "1.37.0" %}
+{% set version = "1.52.1" %}
 
 package:
   name: {{ name|lower }}
@@ -7,9 +7,9 @@ package:
 
 source:
   url: https://github.com/{{ name }}/{{ name }}-python/archive/refs/tags/v{{ version }}.tar.gz
-  sha256: 65fbba12f72cde2d3ab458153cab7f7b0ec63d67f116ee69ff0db2f58f082ecf
+  sha256: 331323868cfd53b7bb64ac404e9efeea80011ea1c24321e44cc6c2c0aa5ce234
   patches:
-    - 001-remove-fancy-pypi-readme.patch
+    # - 001-remove-fancy-pypi-readme.patch
 
 build:
   number: 0
