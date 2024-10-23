@@ -8,8 +8,6 @@ package:
 source:
   url: https://github.com/{{ name }}/{{ name }}-python/archive/refs/tags/v{{ version }}.tar.gz
   sha256: 331323868cfd53b7bb64ac404e9efeea80011ea1c24321e44cc6c2c0aa5ce234
-  patches:
-    # - 001-remove-fancy-pypi-readme.patch
 
 build:
   number: 0
@@ -20,9 +18,6 @@ build:
   skip: True # [py<37 or s390x]
 
 requirements:
-  build:
-    - patch     # [not win]
-    - m2-patch  # [win]
   host:
     - python
     - pip
