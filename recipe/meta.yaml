@@ -27,6 +27,7 @@ requirements:
     - python
     - pip
     - hatchling
+    - hatch-fancy-pypi-readme
   run:
     - python
     - anyio <5,>=3.5.0
@@ -35,8 +36,9 @@ requirements:
     - pydantic <3,>=1.9.0
     - sniffio
     - tqdm >4
-    - typing-extensions <5,>=4.7
+    - typing-extensions <5,>=4.11
     - cached-property  # [py<38]
+    - jiter <1,>=0.4.0
   run_constrained:
     # The following are required for the optional things.
     - numpy >=1
