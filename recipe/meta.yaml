@@ -22,7 +22,7 @@ requirements:
     - hatchling
     - hatch-fancy-pypi-readme
     - pip
-    - python >=3.7.1
+    - python
   run:
     - typing_extensions >=4.11,<5
     - jiter >=0.4.0,<1
