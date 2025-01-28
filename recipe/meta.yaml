@@ -6,7 +6,7 @@ package:
   version: {{ version }}
 
 source:
-  url: https://github.com/openai/openai-python/archive/v{{ version }}.tar.gz
+  url: https://github.com/{{ name }}/{{ name }}-python/archive/v{{ version }}.tar.gz
   sha256: b4002224a088c6d90d6239b92de6b1aa8ca9cfe85229dc283c69e19a6263bba0
 
 build:
@@ -16,6 +16,8 @@ build:
   script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
   # https://github.com/openai/openai-python/blob/v1.60.1/pyproject.toml#L20
   skip: True # [py<38]
+  # nothing provides requested httpx >=0.23.0,<1
+  skip: True # [s390x]
 
 requirements:
   host:
@@ -100,13 +102,6 @@ test:
     - pytest
     - pytest-asyncio
     - rich >=13.7.1
-    - mypy
-    - ruff
-    - time-machine
-    - importlib-metadata >=6.7.0
-    - azure-identity >=1.14.1
-    - trio >=0.22.2
-    - nest-asyncio 1.6.0
 
 about:
   home: https://github.com/openai/openai-python
