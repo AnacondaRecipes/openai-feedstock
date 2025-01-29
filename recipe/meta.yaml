@@ -15,9 +15,8 @@ build:
     - openai=openai.cli:main
   script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
   # https://github.com/openai/openai-python/blob/v1.60.1/pyproject.toml#L20
-  skip: True # [py<38]
-  # nothing provides requested httpx >=0.23.0,<1
-  skip: True # [s390x]
+  # Pkg httpx >=0.23.0,<1 is not avaliable on s390x
+  skip: True # [py<38 or s390x]
 
 requirements:
   host:
