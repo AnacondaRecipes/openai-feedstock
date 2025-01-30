@@ -1,21 +1,22 @@
 {% set name = "openai" %}
-{% set version = "1.52.1" %}
+{% set version = "1.60.1" %}
 
 package:
   name: {{ name|lower }}
   version: {{ version }}
 
 source:
-  url: https://github.com/{{ name }}/{{ name }}-python/archive/refs/tags/v{{ version }}.tar.gz
-  sha256: 331323868cfd53b7bb64ac404e9efeea80011ea1c24321e44cc6c2c0aa5ce234
+  url: https://github.com/{{ name }}/{{ name }}-python/archive/v{{ version }}.tar.gz
+  sha256: b4002224a088c6d90d6239b92de6b1aa8ca9cfe85229dc283c69e19a6263bba0
 
 build:
   number: 0
   entry_points:
     - openai=openai.cli:main
   script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
-  # Minimum required version is 3.7.1, and s390x does not have pandas-stubs
-  skip: True # [py<37 or s390x]
+  # https://github.com/openai/openai-python/blob/v1.60.1/pyproject.toml#L20
+  # Pkg httpx >=0.23.0,<1 is not avaliable on s390x
+  skip: True # [py<38 or s390x]
 
 requirements:
   host:
@@ -25,30 +26,81 @@ requirements:
     - hatch-fancy-pypi-readme
   run:
     - python
-    - anyio <5,>=3.5.0
-    - distro <2,>=1.7.0
-    - httpx <1,>=0.23.0
-    - pydantic <3,>=1.9.0
+    - httpx >=0.23.0,<1
+    - pydantic >=1.9.0,<3
+    - typing-extensions >=4.11,<5
+    - anyio >=3.5.0,<5
+    - distro >=1.7.0,<2
     - sniffio
     - tqdm >4
-    - typing-extensions <5,>=4.11
-    - cached-property  # [py<38]
     - jiter <1,>=0.4.0
   run_constrained:
     # The following are required for the optional things.
+    # https://github.com/openai/openai-python/blob/v1.60.1/pyproject.toml#L47
     - numpy >=1
     - pandas >=1.2.3
-    - pandas-stubs >=1.1.0.11
+    - pandas-stubs >=1.1.0.11  # [not s390x]
+    # https://github.com/openai/openai-python/blob/v1.60.1/pyproject.toml#L46
+    - websockets >=13,<15
+
+# respx =* * does not exist
+{% set ignore_tests = " --ignore=tests/lib/test_pydantic.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=tests/test_client.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=tests/test_files.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=tests/api_resources/test_files.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=tests/api_resources/audio/test_speech.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=tests/lib/test_azure.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=tests/lib/chat/test_completions.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=tests/lib/chat/test_completions_streaming.py" %}
+
+# inline-snapshot =* * does not exist
+{% set ignore_tests = ignore_tests + " --ignore=tests/lib/chat/test_completions_streaming.py" %}
+
+# httpcore.ConnectError: [Errno 61] Connection refused
+# https://github.com/openai/openai-python/blob/v1.60.1/CONTRIBUTING.md#running-tests
+# Won`t setup and run mocked openai server with prism.
+{% set ignore_tests = ignore_tests + " --ignore=tests/api_resources" %}
+
+# AttributeError: 'async_generator' object has no attribute 'audio'
+# AttributeError: 'async_generator' object has no attribute 'beta'
+# AttributeError: 'async_generator' object has no attribute '_make_sse_decoder'
+# Fixed in pytest-asyncio 0.24.0 (tested with conda-forge channel)
+# In main channel latest is ( pytest-asyncio 0.23.8 pkgs/main )
+{% set tests_to_skip = "test_response_basemodel_request_id" %}
+{% set tests_to_skip = tests_to_skip + " or test_async_response_parse_custom_stream" %}
+{% set tests_to_skip = tests_to_skip + " or test_async_response_parse_custom_model" %}
+{% set tests_to_skip = tests_to_skip + " or test_response_basemodel_request_id" %}
+{% set tests_to_skip = tests_to_skip + " or test_async_response_parse_expect_model_union_non_json_content" %}
+{% set tests_to_skip = tests_to_skip + " or test_basic" %}
+{% set tests_to_skip = tests_to_skip + " or test_data_missing_event" %}
+{% set tests_to_skip = tests_to_skip + " or test_event_missing_data" %}
+{% set tests_to_skip = tests_to_skip + " or test_multiple_events" %}
+{% set tests_to_skip = tests_to_skip + " or test_multiple_events_with_data" %}
+{% set tests_to_skip = tests_to_skip + " or test_multiple_data_lines_with_empty_line" %}
+{% set tests_to_skip = tests_to_skip + " or test_data_json_escaped_double_new_line" %}
+{% set tests_to_skip = tests_to_skip + " or test_multiple_data_lines" %}
+{% set tests_to_skip = tests_to_skip + " or test_create_and_run_poll_method_definition_in_sync" %}
+{% set tests_to_skip = tests_to_skip + " or test_create_and_run_stream_method_definition_in_sync" %}
+{% set tests_to_skip = tests_to_skip + " or test_run_stream_method_definition_in_sync" %}
+{% set tests_to_skip = tests_to_skip + " or test_create_and_poll_method_definition_in_sync" %}
+{% set tests_to_skip = tests_to_skip + " or test_translation_create_overloads_in_sync" %}
+{% set tests_to_skip = tests_to_skip + " or test_transcription_create_overloads_in_sync" %}
 
 test:
+  source_files:
+    - tests
   imports:
     - openai
     - openai.version
   commands:
     - openai api -h
     - pip check
+    - pytest -v {{ ignore_tests }} -k "not ({{ tests_to_skip }})"
   requires:
     - pip
+    - pytest
+    - pytest-asyncio
+    - rich >=13.7.1
 
 about:
   home: https://github.com/openai/openai-python
