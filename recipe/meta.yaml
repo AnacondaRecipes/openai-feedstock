@@ -35,7 +35,8 @@ requirements:
   run_constrained:
     # The following are required for the optional things.
     # extra: datalib
-    - numpy >=1
+    # overridden by numpy >=2.0.2
+    #- numpy >=1
     - pandas >=1.2.3
     - pandas-stubs >=1.1.0.11
     # extra: realtime
