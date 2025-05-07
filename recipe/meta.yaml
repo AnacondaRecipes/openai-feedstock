@@ -1,5 +1,5 @@
 {% set name = "openai" %}
-{% set version = "1.60.1" %}
+{% set version = "1.77.0" %}
 
 package:
   name: {{ name|lower }}
@@ -7,16 +7,14 @@ package:
 
 source:
   url: https://github.com/{{ name }}/{{ name }}-python/archive/v{{ version }}.tar.gz
-  sha256: b4002224a088c6d90d6239b92de6b1aa8ca9cfe85229dc283c69e19a6263bba0
+  sha256: 79a3ab474f29732fe9cae66b28c8f28bb76abc779161b36a815a34d5a8c5f506
 
 build:
   number: 0
   entry_points:
     - openai=openai.cli:main
   script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
-  # https://github.com/openai/openai-python/blob/v1.60.1/pyproject.toml#L20
-  # Pkg httpx >=0.23.0,<1 is not avaliable on s390x
-  skip: True # [py<38 or s390x]
+  skip: True # [py<38]
 
 requirements:
   host:
@@ -33,15 +31,18 @@ requirements:
     - distro >=1.7.0,<2
     - sniffio
     - tqdm >4
-    - jiter <1,>=0.4.0
+    - jiter >=0.4.0,<1
   run_constrained:
     # The following are required for the optional things.
-    # https://github.com/openai/openai-python/blob/v1.60.1/pyproject.toml#L47
+    # extra: datalib
     - numpy >=1
     - pandas >=1.2.3
-    - pandas-stubs >=1.1.0.11  # [not s390x]
-    # https://github.com/openai/openai-python/blob/v1.60.1/pyproject.toml#L46
-    - websockets >=13,<15
+    - pandas-stubs >=1.1.0.11
+    # extra: realtime
+    - websockets >=13,<16
+    # extra: voice_helpers
+    - sounddevice >=0.5.1
+    - numpy >=2.0.2
 
 # respx =* * does not exist
 {% set ignore_tests = " --ignore=tests/lib/test_pydantic.py" %}
@@ -66,6 +67,8 @@ requirements:
 # AttributeError: 'async_generator' object has no attribute '_make_sse_decoder'
 # Fixed in pytest-asyncio 0.24.0 (tested with conda-forge channel)
 # In main channel latest is ( pytest-asyncio 0.23.8 pkgs/main )
+# Update 5/7/2025
+# pytest-asyncio>=0.24.0 is available, but tests still fail for same reason
 {% set tests_to_skip = "test_response_basemodel_request_id" %}
 {% set tests_to_skip = tests_to_skip + " or test_async_response_parse_custom_stream" %}
 {% set tests_to_skip = tests_to_skip + " or test_async_response_parse_custom_model" %}
@@ -99,7 +102,7 @@ test:
   requires:
     - pip
     - pytest
-    - pytest-asyncio
+    - pytest-asyncio >=0.24.0
     - rich >=13.7.1
 
 about:
