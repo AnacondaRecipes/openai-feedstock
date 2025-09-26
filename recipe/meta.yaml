@@ -46,14 +46,14 @@ requirements:
     - numpy >=2.0.2
 
 # respx =* * does not exist
-{% set ignore_tests = " --ignore=tests/lib/test_pydantic.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=tests/test_client.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=tests/test_files.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=tests/api_resources/test_files.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=tests/api_resources/audio/test_speech.py" %}
+{% set ignore_tests = " --ignore=tests/test_client.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=tests/lib/test_pydantic.py" %}
+# {% set ignore_tests = ignore_tests + " --ignore=tests/test_files.py" %}
+# {% set ignore_tests = ignore_tests + " --ignore=tests/api_resources/test_files.py" %}
+# {% set ignore_tests = ignore_tests + " --ignore=tests/api_resources/audio/test_speech.py" %}
 {% set ignore_tests = ignore_tests + " --ignore=tests/lib/test_azure.py" %}
 {% set ignore_tests = ignore_tests + " --ignore=tests/lib/chat/test_completions.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=tests/lib/chat/test_completions_streaming.py" %}
+# {% set ignore_tests = ignore_tests + " --ignore=tests/lib/chat/test_completions_streaming.py" %}
 
 # inline-snapshot =* * does not exist
 {% set ignore_tests = ignore_tests + " --ignore=tests/lib/chat/test_completions_streaming.py" %}
@@ -71,28 +71,29 @@ requirements:
 # Update 5/7/2025
 # pytest-asyncio>=0.24.0 is available, but tests still fail for same reason
 {% set tests_to_skip = "test_response_basemodel_request_id" %}
-{% set tests_to_skip = tests_to_skip + " or test_async_response_parse_custom_stream" %}
-{% set tests_to_skip = tests_to_skip + " or test_async_response_parse_custom_model" %}
-{% set tests_to_skip = tests_to_skip + " or test_response_basemodel_request_id" %}
-{% set tests_to_skip = tests_to_skip + " or test_async_response_parse_expect_model_union_non_json_content" %}
-{% set tests_to_skip = tests_to_skip + " or test_basic" %}
-{% set tests_to_skip = tests_to_skip + " or test_data_missing_event" %}
-{% set tests_to_skip = tests_to_skip + " or test_event_missing_data" %}
-{% set tests_to_skip = tests_to_skip + " or test_multiple_events" %}
-{% set tests_to_skip = tests_to_skip + " or test_multiple_events_with_data" %}
-{% set tests_to_skip = tests_to_skip + " or test_multiple_data_lines_with_empty_line" %}
-{% set tests_to_skip = tests_to_skip + " or test_data_json_escaped_double_new_line" %}
-{% set tests_to_skip = tests_to_skip + " or test_multiple_data_lines" %}
-{% set tests_to_skip = tests_to_skip + " or test_create_and_run_poll_method_definition_in_sync" %}
-{% set tests_to_skip = tests_to_skip + " or test_create_and_run_stream_method_definition_in_sync" %}
-{% set tests_to_skip = tests_to_skip + " or test_run_stream_method_definition_in_sync" %}
-{% set tests_to_skip = tests_to_skip + " or test_create_and_poll_method_definition_in_sync" %}
-{% set tests_to_skip = tests_to_skip + " or test_translation_create_overloads_in_sync" %}
-{% set tests_to_skip = tests_to_skip + " or test_transcription_create_overloads_in_sync" %}
+# {% set tests_to_skip = tests_to_skip + " or test_async_response_parse_custom_stream" %}
+# {% set tests_to_skip = tests_to_skip + " or test_async_response_parse_custom_model" %}
+# {% set tests_to_skip = tests_to_skip + " or test_async_response_parse_expect_model_union_non_json_content" %}
+# {% set tests_to_skip = tests_to_skip + " or test_basic" %}
+# {% set tests_to_skip = tests_to_skip + " or test_data_missing_event" %}
+# {% set tests_to_skip = tests_to_skip + " or test_event_missing_data" %}
+# {% set tests_to_skip = tests_to_skip + " or test_multiple_events" %}
+# {% set tests_to_skip = tests_to_skip + " or test_multiple_events_with_data" %}
+# {% set tests_to_skip = tests_to_skip + " or test_multiple_data_lines_with_empty_line" %}
+# {% set tests_to_skip = tests_to_skip + " or test_data_json_escaped_double_new_line" %}
+# {% set tests_to_skip = tests_to_skip + " or test_multiple_data_lines" %}
+# {% set tests_to_skip = tests_to_skip + " or test_create_and_run_poll_method_definition_in_sync" %}
+# {% set tests_to_skip = tests_to_skip + " or test_create_and_run_stream_method_definition_in_sync" %}
+# {% set tests_to_skip = tests_to_skip + " or test_run_stream_method_definition_in_sync" %}
+# {% set tests_to_skip = tests_to_skip + " or test_create_and_poll_method_definition_in_sync" %}
+# {% set tests_to_skip = tests_to_skip + " or test_translation_create_overloads_in_sync" %}
+# {% set tests_to_skip = tests_to_skip + " or test_transcription_create_overloads_in_sync" %}
 
 test:
   source_files:
     - tests
+    - pyproject.toml
+    - README.md
   imports:
     - openai
     - openai.version
@@ -104,6 +105,7 @@ test:
     - pip
     - pytest
     - pytest-asyncio >=0.24.0
+    - dirty-equals
     - rich >=13.7.1
 
 about:
