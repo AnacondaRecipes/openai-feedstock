@@ -35,7 +35,6 @@ requirements:
   run_constrained:
     # The following are required for the optional things.
     # Extra: aiohttp
-    - aiohttp
     - httpx_aiohttp >=0.1.8
     # extra: datalib
     - pandas >=1.2.3
@@ -44,7 +43,7 @@ requirements:
     - websockets >=13,<16
     # extra: voice_helpers
     - sounddevice >=0.5.1
-    - numpy >=2.0.2
+    # - numpy >=2.0.2
 
 # respx =* * does not exist
 {% set ignore_tests = " --ignore=tests/test_client.py" %}
