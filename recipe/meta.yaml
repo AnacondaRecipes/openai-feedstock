@@ -1,5 +1,13 @@
 {% set name = "openai" %}
 {% set version = "1.109.1" %}
+{% set ignore_tests = " --ignore=tests/test_client.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=tests/lib/test_pydantic.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=tests/lib/test_azure.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=tests/lib/responses/test_responses.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=tests/lib/chat/test_completions.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=tests/lib/chat/test_completions_streaming.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=tests/api_resources" %}
+{% set tests_to_skip = "test_response_basemodel_request_id" %}
 
 package:
   name: {{ name|lower }}
@@ -10,11 +18,11 @@ source:
   sha256: d173ed8dbca665892a6db099b4a2dfac624f94d20a93f46eb0b56aae940ed869
 
 build:
-  number: 0
+  number: 1
   entry_points:
     - openai=openai.cli:main
   script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
-  skip: True # [py<38]
+  skip: true  # [py<38]
 
 requirements:
   host:
@@ -46,20 +54,10 @@ requirements:
     # - numpy >=2.0.2
 
 # respx =* * does not exist
-{% set ignore_tests = " --ignore=tests/test_client.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=tests/lib/test_pydantic.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=tests/lib/test_azure.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=tests/lib/responses/test_responses.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=tests/lib/chat/test_completions.py" %}
-
 # inline-snapshot =* * does not exist
-{% set ignore_tests = ignore_tests + " --ignore=tests/lib/chat/test_completions_streaming.py" %}
-
 # httpcore.ConnectError: [Errno 61] Connection refused
 # https://github.com/openai/openai-python/blob/v1.60.1/CONTRIBUTING.md#running-tests
 # Won`t setup and run mocked openai server with prism.
-{% set ignore_tests = ignore_tests + " --ignore=tests/api_resources" %}
-
 # AttributeError: 'async_generator' object has no attribute 'audio'
 # AttributeError: 'async_generator' object has no attribute 'beta'
 # AttributeError: 'async_generator' object has no attribute '_make_sse_decoder'
@@ -67,8 +65,6 @@ requirements:
 # In main channel latest is ( pytest-asyncio 0.23.8 pkgs/main )
 # Update 5/7/2025
 # pytest-asyncio>=0.24.0 is available, but tests still fail for same reason
-{% set tests_to_skip = "test_response_basemodel_request_id" %}
-
 test:
   source_files:
     - tests
