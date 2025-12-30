@@ -1,13 +1,5 @@
 {% set name = "openai" %}
-{% set version = "1.109.1" %}
-{% set ignore_tests = " --ignore=tests/test_client.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=tests/lib/test_pydantic.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=tests/lib/test_azure.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=tests/lib/responses/test_responses.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=tests/lib/chat/test_completions.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=tests/lib/chat/test_completions_streaming.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=tests/api_resources" %}
-{% set tests_to_skip = "test_response_basemodel_request_id" %}
+{% set version = "2.14.0" %}
 
 package:
   name: {{ name|lower }}
@@ -15,10 +7,10 @@ package:
 
 source:
   url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: d173ed8dbca665892a6db099b4a2dfac624f94d20a93f46eb0b56aae940ed869
+  sha256: 419357bedde9402d23bf8f2ee372fca1985a73348debba94bddff06f19459952
 
 build:
-  number: 1
+  number: 0
   entry_points:
     - openai=openai.cli:main
   script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
@@ -39,11 +31,11 @@ requirements:
     - distro >=1.7.0,<2
     - sniffio
     - tqdm >4
-    - jiter >=0.4.0,<1
+    - jiter >=0.10.0,<1
   run_constrained:
     # The following are required for the optional things.
     # Extra: aiohttp
-    - httpx_aiohttp >=0.1.8
+    - httpx_aiohttp >=0.1.9
     # extra: datalib
     - pandas >=1.2.3
     - pandas-stubs >=1.1.0.11
@@ -54,10 +46,20 @@ requirements:
     # - numpy >=2.0.2
 
 # respx =* * does not exist
+{% set ignore_tests = " --ignore=tests/test_client.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=tests/lib/test_pydantic.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=tests/lib/test_azure.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=tests/lib/responses/test_responses.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=tests/lib/chat/test_completions.py" %}
+
 # inline-snapshot =* * does not exist
+{% set ignore_tests = ignore_tests + " --ignore=tests/lib/chat/test_completions_streaming.py" %}
+
 # httpcore.ConnectError: [Errno 61] Connection refused
 # https://github.com/openai/openai-python/blob/v1.60.1/CONTRIBUTING.md#running-tests
 # Won`t setup and run mocked openai server with prism.
+{% set ignore_tests = ignore_tests + " --ignore=tests/api_resources" %}
+
 # AttributeError: 'async_generator' object has no attribute 'audio'
 # AttributeError: 'async_generator' object has no attribute 'beta'
 # AttributeError: 'async_generator' object has no attribute '_make_sse_decoder'
@@ -65,6 +67,12 @@ requirements:
 # In main channel latest is ( pytest-asyncio 0.23.8 pkgs/main )
 # Update 5/7/2025
 # pytest-asyncio>=0.24.0 is available, but tests still fail for same reason
+{% set tests_to_skip = "test_response_basemodel_request_id" %}
+
+# pytest-asyncio >=0.24.0, pytest-tornasync calls into pytest-asyncio's deprecated code path, hitting asyncio.get_event_loop().
+{% set tests_to_skip = tests_to_skip + " or test_top_level_alias" %}
+{% set tests_to_skip = tests_to_skip + " or test_recursive_typeddict" %}
+
 test:
   source_files:
     - tests
@@ -81,8 +89,10 @@ test:
     - pip
     - pytest
     - pytest-asyncio >=0.24.0
-    - pytest-xdist
-    - dirty-equals
+    # pytest-tornasync is needed temporarily to run some async tests until openai will have a full compatibility with pytest-asyncio >=1.0.0.
+    - pytest-tornasync
+    - pytest-xdist >=3.6.1
+    - dirty-equals >=0.6.0
     - rich >=13.7.1
 
 about:
