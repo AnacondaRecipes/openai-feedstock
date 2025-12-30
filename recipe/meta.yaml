@@ -60,6 +60,9 @@ requirements:
 # Won`t setup and run mocked openai server with prism.
 {% set ignore_tests = ignore_tests + " --ignore=tests/api_resources" %}
 
+# Ignore problematic tests for Python 3.14 until openai will have a full compatibility with pytest-asyncio >=1.0.0.
+{% set ignore_tests = ignore_tests + " --ignore=tests/test_streaming.py" %}  # [py==314]
+
 # AttributeError: 'async_generator' object has no attribute 'audio'
 # AttributeError: 'async_generator' object has no attribute 'beta'
 # AttributeError: 'async_generator' object has no attribute '_make_sse_decoder'
