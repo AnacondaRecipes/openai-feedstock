@@ -62,6 +62,7 @@ requirements:
 
 # Ignore problematic tests for Python 3.14 until openai will have a full compatibility with pytest-asyncio >=1.0.0.
 {% set ignore_tests = ignore_tests + " --ignore=tests/test_streaming.py" %}  # [py==314]
+{% set ignore_tests = ignore_tests + " --ignore=tests/test_response.py" %}  # [py==314]
 
 # AttributeError: 'async_generator' object has no attribute 'audio'
 # AttributeError: 'async_generator' object has no attribute 'beta'
