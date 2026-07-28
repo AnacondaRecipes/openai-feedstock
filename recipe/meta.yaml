@@ -1,20 +1,20 @@
 {% set name = "openai" %}
-{% set version = "2.30.0" %}
+{% set version = "2.49.0" %}
 
 package:
-  name: {{ name|lower }}
+  name: {{ name }}
   version: {{ version }}
 
 source:
   url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: 92f7661c990bda4b22a941806c83eabe4896c3094465030dd882a71abe80c885
+  sha256: 80f934333b5b83cef2fde9af7151dacaa72e150f43f92b7675f7647ca6157f48
 
 build:
   number: 0
   entry_points:
     - openai=openai.cli:main
   script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
-  skip: true  # [py<39]
+  skip: true  # [py<310]
 
 requirements:
   host:
@@ -26,7 +26,7 @@ requirements:
     - python
     - httpx >=0.23.0,<1
     - pydantic >=1.9.0,<3
-    - typing-extensions >=4.11,<5
+    - typing-extensions >=4.14,<5
     - anyio >=3.5.0,<5
     - distro >=1.7.0,<2
     - sniffio
@@ -35,8 +35,10 @@ requirements:
   run_constrained:
     # The following are required for the optional things.
     # Extra: aiohttp
+    # - aiohttp >=3.14.1
     - httpx_aiohttp >=0.1.9
     # extra: datalib
+    # - numpy >=1
     - pandas >=1.2.3
     - pandas-stubs >=1.1.0.11
     # extra: realtime
