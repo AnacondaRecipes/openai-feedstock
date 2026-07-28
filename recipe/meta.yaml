@@ -11,8 +11,6 @@ source:
 
 build:
   number: 0
-  entry_points:
-    - openai=openai.cli:main
   script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
   skip: true  # [py<310]
 
@@ -89,7 +87,6 @@ test:
     - openai
     - openai.version
   commands:
-    - openai api -h
     - pip check
     - pytest -v {{ ignore_tests }} -k "not ({{ tests_to_skip }})"
   requires:
