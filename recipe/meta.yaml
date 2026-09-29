@@ -1,13 +1,15 @@
 {% set name = "openai" %}
-{% set version = "2.49.0" %}
+{% set version = "3.17.0" %}
 
+# respx does not exist in main and needed by conftest.py
+# Unable to configure tests
 package:
   name: {{ name }}
   version: {{ version }}
 
 source:
   url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: 80f934333b5b83cef2fde9af7151dacaa72e150f43f92b7675f7647ca6157f48
+  sha256: 28910914e6ffaf622f1bbf5dfe02e221cc2b929e492dd30d06b6826939dedf92
 
 build:
   number: 0
@@ -18,18 +20,20 @@ requirements:
   host:
     - python
     - pip
-    - hatchling >=1.26.3
+    - hatchling ==1.27.0
     - hatch-fancy-pypi-readme
   run:
     - python
     - httpx >=0.23.0,<1
-    - pydantic >=1.9.0,<3
+    - pydantic >=1.10.13,<3,!=2.0.*,!=2.1.*,!=2.2.*,!=2.3.*
     - typing-extensions >=4.14,<5
-    - anyio >=3.5.0,<5
+    - anyio >=4.10.0,<5
     - distro >=1.7.0,<2
     - sniffio
     - tqdm >4
-    - jiter >=0.10.0,<1
+    - jiter >=0.16.0,<1
+    - httpx2 >=2.12.0,<3
+    - typing_extensions >=4.14,<5
   run_constrained:
     # The following are required for the optional things.
     # Extra: aiohttp
@@ -44,9 +48,12 @@ requirements:
     # extra: voice_helpers
     - sounddevice >=0.5.1
     # - numpy >=2.0.2
+    - aiohttp >=3.14.3
+    - botocore >=1.40.0,<2
+    - urllib3 >=2.7.0,<3
+    - numpy >=2.0.2
+    - python-sounddevice >=0.5.1
 
-# respx does not exist in main and needed by conftest.py
-# Unable to configure tests
 test:
   source_files:
     - tests
