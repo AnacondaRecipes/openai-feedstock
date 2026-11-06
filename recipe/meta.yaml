@@ -11,11 +11,6 @@ source:
 
 build:
   number: 1
-  # httpx2, a hard run dependency (>=2.12.0,<3), has no win-arm64 py3.15 build yet
-  # (win-arm64 only has py312-py314), so the win-arm64 py3.15 variant cannot be
-  # installed or tested. Remove "win and arm64 and py>=315" once httpx2 ships for
-  # win-arm64 py3.15 (same for truststore and uv-dynamic-versioning).
-  skip: true  # [py<310 or (win and arm64 and py>=315)]
   script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
 
 requirements:
