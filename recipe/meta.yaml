@@ -10,8 +10,7 @@ source:
   sha256: 73b470c09cf2171dce930e36af01c6632241adda0120ad84302ad229f9130a5a
 
 build:
-  number: 0
-  skip: true  # [py<310]
+  number: 1
   script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
 
 requirements:
@@ -31,7 +30,11 @@ requirements:
     # Extra aiohttp
     - aiohttp >=3.14.3
     # Extra realtime
-    - websockets >=13,<16
+    # websockets 17.* is the only version that works on Python 3.15: the 16.0
+    # py3.15 rebuild dies with BufferError in websockets/utils.py::apply_mask,
+    # fixed upstream in 17.3 (AnacondaRecipes/websockets-feedstock#8)
+    - websockets >=13,<16  # [py<315]
+    - websockets >=13,<18  # [py==315]
     # Extra datalib
     - pandas >=1.2.3
     # numpy >=1
@@ -58,7 +61,11 @@ test:
     - openai.version
   commands:
     - pip check
-    - pytest -vv tests/test_client.py tests/test_streaming.py tests/lib/test_pydantic.py {{ deselect_tests }}
+    # -n 0 turns off the parallel workers that upstream pyproject.toml enables with
+    # addopts "-n auto". On osx-arm64 the xdist session died at 99% with every test
+    # passing, no failure and a truncated pytest summary (pytest-xdist 3.8.0);
+    # serially the same 369 tests give 347 passed, 22 skipped in ~15s.
+    - pytest -vv -n 0 tests/test_client.py tests/test_streaming.py tests/lib/test_pydantic.py {{ deselect_tests }}
   requires:
     - pip
     - pytest
